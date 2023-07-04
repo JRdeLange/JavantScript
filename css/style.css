@@ -5,6 +5,19 @@
     padding: 10px;
 }
 
+#config_box {
+    width: 100%;
+    display: flex;
+}
+
+.config_item {
+    text-align: center;
+    margin-right: 10px;
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
 canvas {
     border: 1px solid black;
 }

@@ -2,10 +2,11 @@ import Vec2 from "./vec2.js"
 
 export default class Ant{
 
-    constructor(pos){
-        this.pos = pos;
+    constructor(nest, config){
+        this.nest = nest;
+        this.pos = nest.pos;
         this.rot = Math.random() * 2 * Math.PI;
-        this.speed = 0.5;
+        this.config = config;
     }
 
     tick(){
@@ -14,10 +15,10 @@ export default class Ant{
 
     move(){
         // Wiggle
-        this.rot += Math.random() * 0.4 - 0.2;
+        this.rot += (Math.random() -0.5) * this.config.wiggle;
         
         // Move
-        this.pos = this.pos.add(Vec2.fromRadians(this.rot));
+        this.pos = this.pos.add(Vec2.fromRadians(this.rot).multiply(this.config.speed));
 
     }
 
@@ -31,6 +32,10 @@ export default class Ant{
 
     set_pos(pos){
         this.pos = pos;
+    }
+
+    die(){
+        // Do things like drop whatever is being carried
     }
 
 }

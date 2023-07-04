@@ -1,53 +1,35 @@
 import World from "./world.js"
-
+import Renderer from "./renderer.js"
 
 let width = 800;
-let height = 800;
-let nr_of_ants = 250;
+let height = 600;
+
 const canvas = get_and_setup_canvas(width, height);
 const context = canvas.getContext("2d");
-const sprite = new Image();
-sprite.src = "./assets/ant.png";
 
-let world = new World(nr_of_ants, width, height);
-
-
+let world = new World(width, height);
+let renderer = new Renderer(world, context, loop);
 
 function get_and_setup_canvas(){
     const canvas = document.getElementById("canvas");
     canvas.width = width;
     canvas.height = height;
-    return canvas
+    return canvas;
 }
 
-
-function draw_ants(){
-    
-    for (const ant of world.get_ants()) {
-        let pos = ant.get_pos();
-        let rot = ant.get_rot();
-        context.save();
-        context.translate(pos.x, pos.y);
-        context.rotate(rot);
-        // Draw at minus half the dimensions of the sprite to rotate from the center
-        context.drawImage(sprite, -8, -8);
-        context.restore();
-    }
-    // Draw each ant at its position
+function test(){
+    console.log(test);
 }
-
 
 function loop(){
-    // Clear canvas
-    context.clearRect(0, 0, canvas.width, canvas.height)
-
     // Advance model
     world.tick();
 
     // Draw
-    draw_ants();
+    renderer.draw();
     window.requestAnimationFrame(loop);
 }
 
 
-sprite.onload = function() { window.requestAnimationFrame(loop); };
+// when all sprites have been loaded
+// window.requestAnimationFrame(loop);
