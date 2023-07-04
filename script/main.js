@@ -1,9 +1,9 @@
 import World from "./world.js"
 
 
-let width = 600;
-let height = 600;
-let nr_of_ants = 30;
+let width = 800;
+let height = 800;
+let nr_of_ants = 250;
 const canvas = get_and_setup_canvas(width, height);
 const context = canvas.getContext("2d");
 const sprite = new Image();
