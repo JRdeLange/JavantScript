@@ -37,7 +37,7 @@ export default class World{
         
         // Facilitate changing number of ants
         this.nr_of_ants_slider.oninput = (event) => {
-            this.change_nr_of_ants_to(event.target.value);
+            //this.change_nr_of_ants_to(event.target.value);
         }
     }
     
@@ -75,6 +75,14 @@ export default class World{
     }
 
     tick(){
+        // Check if we still have enough ants
+        if (this.ants.length > this.nr_of_ants_slider.value){
+            this.ants[this.ants.length - 1].die();
+            this.ants.pop();
+        } else if (this.ants.length < this.nr_of_ants_slider.value) {
+            this.spawn_ant();
+        }
+
         // For each ant
         for (const ant of this.ants) {
             // Move
