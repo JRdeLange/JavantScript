@@ -2,8 +2,9 @@
 
 export default class Renderer{
 
-    constructor(world, context, loop_function){
+    constructor(world, canvas, context, loop_function){
         this.world = world;
+        this.canvas = canvas;
         this.context = context;
         this.loop_function = loop_function;
 
@@ -15,7 +16,7 @@ export default class Renderer{
 
     initialize_sprites(){
         this.nest_sprite = new Image();
-        this.nest_sprite.src = "./assets/nest.png"
+        this.nest_sprite.src = "./assets/nest.png";
         this.nest_sprite.onload = () => {
             this.checkSpritesLoaded();
         };
@@ -31,6 +32,7 @@ export default class Renderer{
     draw(){
         this.context.clearRect(0, 0, canvas.width, canvas.height);
 
+        this.draw_pheromone_map();
         this.draw_nest();
         this.draw_ants();
     }
@@ -59,11 +61,16 @@ export default class Renderer{
         }
     }
 
-    checkSpritesLoaded() {
+    draw_pheromone_map(){
+        let map_canvas = this.world.get_pheromone_map().get_scaled_canvas();
+        this.context.drawImage(map_canvas, 0, 0);
+    }
+
+    checkSpritesLoaded(){
         // Check if both sprites have been loaded
         if (this.nest_sprite.complete && this.ant_sprite.complete) {
           // Kickstart the main loop
           window.requestAnimationFrame(this.loop_function);
         }
-      }
+    }
 }

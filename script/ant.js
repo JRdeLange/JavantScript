@@ -1,12 +1,14 @@
 import Vec2 from "./vec2.js"
 
+
 export default class Ant{
 
-    constructor(nest, config){
+    constructor(nest, config, pheromone_map){
         this.nest = nest;
         this.pos = nest.pos;
         this.rot = Math.random() * 2 * Math.PI;
         this.config = config;
+        this.pheromone_map = pheromone_map;
     }
 
     tick(){
@@ -20,6 +22,7 @@ export default class Ant{
         // Move
         this.pos = this.pos.add(Vec2.fromRadians(this.rot).multiply(this.config.speed));
 
+        this.pheromone_map.drop_at_world_coords(this.pos.x, this.pos.y, 50);
     }
 
     get_rot(){
