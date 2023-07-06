@@ -46,17 +46,40 @@ function stopClickRegistration() {
 }
 
 function registerClick(event) {
-  if (isMouseDown) {
+    event.preventDefault();
+  
+    let clientX, clientY;
+    
+    if (event.touches && event.touches.length > 0) {
+      // Touch event
+      clientX = event.touches[0].clientX;
+      clientY = event.touches[0].clientY;
+      
+      // Prevent scrolling on touch devices
+      event.preventDefault();
+    } else {
+      // Mouse event
+      clientX = event.clientX;
+      clientY = event.clientY;
+    }
+    
     const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    world.pheromone_map.place_food_at(x, y);
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    
+    
+    if (isMouseDown){
+        world.pheromone_map.place_food_at(x, y);
+    }
   }
-}
+  
 
 canvas.addEventListener("mousedown", startClickRegistration);
 canvas.addEventListener("mouseup", stopClickRegistration);
 canvas.addEventListener("mousemove", registerClick);
+canvas.addEventListener("touchstart", startClickRegistration);
+canvas.addEventListener("touchend", stopClickRegistration);
+canvas.addEventListener("touchmove", registerClick);
 
 // Start the animation loop
 window.requestAnimationFrame(loop);
