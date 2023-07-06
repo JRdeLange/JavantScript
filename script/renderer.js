@@ -13,6 +13,8 @@ export default class Renderer{
         this.ant_sprite = null;
         this.ant_food_sprite = null;
         this.initialize_sprites();
+
+        this.loaded = false;
     }
 
     initialize_sprites(){
@@ -81,9 +83,11 @@ export default class Renderer{
     }
 
     checkSpritesLoaded(){
+        if (this.loaded) {return;}
         // Check if both sprites have been loaded
         if (this.nest_sprite.complete && this.ant_sprite.complete && this.ant_food_sprite.complete) {
           // Kickstart the main loop
+          this.loaded = true;
           window.requestAnimationFrame(this.loop_function);
         }
     }
