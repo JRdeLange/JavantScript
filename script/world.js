@@ -111,8 +111,16 @@ export default class World{
 
             // Keep inside world
             let pos = ant.get_pos();
-            if (pos.x < 0) { pos.x = 0; } else if (pos.x > this.width) { pos.x = this.width; }
-            if (pos.y < 0) { pos.y = 0; } else if (pos.y > this.height) { pos.y = this.height; }
+            if (pos.x < 0) {
+                pos.x = 0; ant.turn_around();
+            } else if (pos.x > this.width) { 
+                pos.x = this.width; ant.turn_around();
+            }
+            if (pos.y < 0) { 
+                pos.y = 0; ant.turn_around();
+            } else if (pos.y > this.height) { 
+                pos.y = this.height; ant.turn_around();
+            }
         }
 
         this.pheromone_map.update_pheromones();

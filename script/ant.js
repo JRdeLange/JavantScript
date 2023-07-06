@@ -150,6 +150,10 @@ export default class Ant{
         return this.rot;
     }
 
+    turn_around(){
+        this.rot += Math.PI;
+    }
+
     get_pos(){
         return this.pos;
     }
