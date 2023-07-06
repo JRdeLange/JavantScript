@@ -11,6 +11,7 @@ export default class Renderer{
         // setup sprites
         this.nest_sprite = null;
         this.ant_sprite = null;
+        this.ant_food_sprite = null;
         this.initialize_sprites();
     }
 
@@ -26,6 +27,13 @@ export default class Renderer{
         this.ant_sprite.onload = () => {
             this.checkSpritesLoaded();
         };
+
+        this.ant_food_sprite = new Image();
+        this.ant_food_sprite.src = "./assets/ant_food.png";
+        this.ant_food_sprite.onload = () => {
+            this.checkSpritesLoaded();
+        };
+        
     }
 
 
@@ -56,7 +64,13 @@ export default class Renderer{
             this.context.translate(pos.x, pos.y);
             this.context.rotate(rot);
             // Draw at minus half the dimensions of the sprite to rotate from the center
-            this.context.drawImage(this.ant_sprite, this.ant_sprite.width / -2, this.ant_sprite.height / -2);
+            let sprite = null;
+            if (ant.get_state() == "CARRY"){
+                sprite = this.ant_food_sprite;
+            } else {
+                sprite = this.ant_sprite;
+            }
+            this.context.drawImage(sprite, this.ant_sprite.width / -2, this.ant_sprite.height / -2);
             this.context.restore();
         }
     }
@@ -68,7 +82,7 @@ export default class Renderer{
 
     checkSpritesLoaded(){
         // Check if both sprites have been loaded
-        if (this.nest_sprite.complete && this.ant_sprite.complete) {
+        if (this.nest_sprite.complete && this.ant_sprite.complete && this.ant_food_sprite.complete) {
           // Kickstart the main loop
           window.requestAnimationFrame(this.loop_function);
         }

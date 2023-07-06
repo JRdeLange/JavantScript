@@ -3,7 +3,8 @@
 export default class PheromoneMap{
 
     constructor(scale, width, height){
-        this.map = [];
+        this.pheromone_map = [];
+        this.food_map = [];
         this.scale = scale;
         this.world_width = width;
         this.world_height = height;
@@ -18,8 +19,9 @@ export default class PheromoneMap{
 
         this.initialize();
 
-        this.spread_speed = 3;
-        this.fade_speed = 0.3;
+        this.spread_speed = 0.35;
+        this.fade_multiplier = 0.995;
+        this.pheromone_threshold = 5;
     }
 
     initialize(){
@@ -28,15 +30,18 @@ export default class PheromoneMap{
             for (let y = 0; y < this.height; y++) {
                 column.push(0);
             }
-            this.map.push(column);
+            this.pheromone_map.push(column);
+            this.food_map.push(structuredClone(column));
         }
 
-        // Init map to white
+        // Init bitmap to white
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
                 this.set_pixel(x, y, [255, 255, 255]);
             }   
         }
+
+        this.drop_test_food();
 
         // Set scaled_canvas dimensions
         this.scaled_canvas.width = this.world_width;
@@ -44,11 +49,11 @@ export default class PheromoneMap{
         this.scaled_context.scale(this.scale, this.scale);
     }
 
-    drop_at_world_coords(x, y, quantity){
-        x /= this.scale;
-        y /= this.scale;
-        if (this.is_valid_coords(x, y)){
-            this.map[Math.floor(x)][Math.floor(y)] += quantity;
+    drop_test_food(){
+        for (let x = 80; x < 100; x++){
+            for (let y = 60; y < 80; y++){
+                this.food_map[x][y] = 255;
+            }
         }
     }
 
@@ -66,18 +71,26 @@ export default class PheromoneMap{
                 let new_value = this.avg_surrounding_pixels(x, y);
                 
                 // Disappear a bit of it
-                new_value = Math.max(0, new_value - this.fade_speed);                
+                new_value = Math.max(0, new_value * this.fade_multiplier);      
+                
+                if (new_value < this.pheromone_threshold){
+                    new_value = 0;
+                }
                 
                 // Write new pheromone value
                 column.push(new_value);
-                // Make it appear red
-                this.set_pixel(x, y, [255, 255 - new_value, 255 - new_value]);
             }   
             new_map.push(column);
         }
-        this.map = new_map;
+        this.pheromone_map = new_map;
+    }
 
-        this.update_scaled_bitmap();
+    update_pheromones(){
+        this.spread_pheromones()
+
+        this.update_bitmap();
+
+        this.update_scaled_canvas();
     }
 
     avg_surrounding_pixels(x, y){
@@ -85,28 +98,28 @@ export default class PheromoneMap{
         let sum = 0;
 
         if (x != 0) {
-            sum += this.map[x - 1][y];
+            sum += this.pheromone_map[x - 1][y];
             n_pixels++;
         }
 
         if (x != this.width - 1) {
-            sum += this.map[x + 1][y];
+            sum += this.pheromone_map[x + 1][y];
             n_pixels++;
         }
 
         if (y != 0) {
-            sum += this.map[x][y - 1];
+            sum += this.pheromone_map[x][y - 1];
             n_pixels++;
         }
 
         if (y != this.height - 1) {
-            sum += this.map[x][y + 1];
+            sum += this.pheromone_map[x][y + 1];
             n_pixels++;
         }
 
         sum /= n_pixels;
 
-        return (this.spread_speed * this.map[x][y] + sum) / (this.spread_speed + 1);
+        return (this.spread_speed * this.pheromone_map[x][y] + sum) / (this.spread_speed + 1);
     }
 
     get_pixel(x, y, pixel_data=this.pixel_data){
@@ -133,6 +146,14 @@ export default class PheromoneMap{
         return x * 4 + y * this.width * 4;
     }
 
+    world_to_map_coords(x, y){
+        x /= this.scale;
+        y /= this.scale;
+        x = Math.floor(x);
+        y = Math.floor(y);
+        return [x, y];
+    }
+
     add_rgb(rgb1, rgb2){
         return [rgb1[0] + rgb2[0], rgb1[1] + rgb2[1], rgb1[2] + rgb2[2]];
     }
@@ -146,7 +167,7 @@ export default class PheromoneMap{
     }
 
     is_valid_coords(x, y){
-        return !(x < 0 || x > this.width || y < 0 || y > this.height);
+        return !(x < 0 || x > this.width - 1 || y < 0 || y > this.height - 1);
     }
 
     get_bitmap(){
@@ -157,15 +178,55 @@ export default class PheromoneMap{
         return this.scaled_canvas;
     }
 
-    get_value_at(x, y){
+    get_pheromone_at(x, y){
+        let pos = this.world_to_map_coords(x, y);
+        x = pos[0]; y = pos[1];
         if (this.is_valid_coords(x, y)){
-            return this.map[x][y];
+            return this.pheromone_map[x][y];
         }
-        console.log("Invalid pheromone map coordinates");
         return 0;
     }
 
-    update_scaled_bitmap(){
+    drop_pheromone_at(x, y, quantity){
+        let pos = this.world_to_map_coords(x, y);
+        x = pos[0]; y = pos[1];
+        if (this.is_valid_coords(x, y)){
+            this.pheromone_map[x][y] += quantity;
+        }
+    }
+
+    get_food_at(x, y){
+        let pos = this.world_to_map_coords(x, y);
+        x = pos[0]; y = pos[1];
+        if (this.is_valid_coords(x, y)){
+            return this.food_map[x][y];
+        }
+        return 0;
+    }
+
+    take_food_at(x, y, amount){
+        let pos = this.world_to_map_coords(x, y);
+        x = pos[0]; y = pos[1];
+        if (this.is_valid_coords(x, y)){
+            this.food_map[x][y] -= amount;
+        }
+        
+    }
+    
+
+    update_bitmap(){
+        for (let x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
+                if (this.food_map[x][y] > 0){
+                    this.set_pixel(x, y, [0, 150, 0]);
+                } else {
+                    this.set_pixel(x, y, [255, 255 - this.pheromone_map[x][y], 255 - this.pheromone_map[x][y]]);
+                }
+            }
+        }
+    }
+
+    update_scaled_canvas(){
         let unscaled_canvas = document.createElement("canvas");
         unscaled_canvas.width = this.width;
         unscaled_canvas.height = this.height;

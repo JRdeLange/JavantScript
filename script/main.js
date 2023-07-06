@@ -18,11 +18,17 @@ function get_and_setup_canvas(){
     return canvas;
 }
 
+function update_ui(){
+    document.getElementById("food_counter").innerHTML = "Gathered food: " + world.nest.get_food_collected();
+}
+
 function loop(){
     // Advance model
     world.tick();
 
     // Draw
+    update_ui();
+
     renderer.draw();
     window.requestAnimationFrame(loop);
 }

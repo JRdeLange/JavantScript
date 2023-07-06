@@ -5,13 +5,17 @@
         <script type="module" src="./script/main.js" defer></script>
     </head>
     <body>
-        <h1 class="title">javANTscript</h1>
+        <div id="title_container">
+            <h1 class="title_element">javANTscript</h1>
+            <h1 class="title_element" id=food_counter>Gathered food: 0</h1>
+        </div>
+        
         <canvas id="canvas"></canvas>
 
         <div id="config_box">
             <div class="config_item">
                 <p>Number of ants</p>
-                <input type="range" min="0" max="2000" value="10" id="nr_of_ants">
+                <input type="range" min="0" max="2000" value="400" id="nr_of_ants">
             </div>
 
             <div class="config_item">
@@ -22,6 +26,11 @@
             <div class="config_item">
                 <p>Ant wiggle</p>
                 <input type="range" min="0" max="1.5" value="0.6" step="0.05" id="ant_wiggle">
+            </div>
+
+            <div class="config_item">
+                <p>Pheromone amount</p>
+                <input type="range" min="0" max="250" value="80" step="1" id="pheromone_amount">
             </div>
         </div>
     </body>

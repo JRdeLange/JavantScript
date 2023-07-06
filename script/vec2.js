@@ -56,14 +56,14 @@ export default class Vec2 {
     }
 
     // Create a vector from a given angle in radians
-    static fromRadians(angle) {
+    static from_radians(angle) {
         const x = Math.cos(angle);
         const y = Math.sin(angle);
         return new Vec2(x, y);
     }
 
     // Convert the vector to an angle in radians
-    toRadians() {
+    to_radians() {
             return Math.atan2(this.y, this.x);
     }
 
@@ -73,9 +73,9 @@ export default class Vec2 {
     }
 
     // Find the angle from this vector to another vector
-    angleTo(vector) {
-        const thisAngle = this.toRadians();
-        const otherAngle = vector.toRadians();
+    angle_to(vector) {
+        const thisAngle = this.to_radians();
+        const otherAngle = vector.to_radians();
         let angle = otherAngle - thisAngle;
 
         if (angle > Math.PI) {

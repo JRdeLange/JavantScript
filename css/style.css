@@ -1,8 +1,15 @@
-.title {
+.title_element {
     border: 3px solid red;
+    border-radius: 5px;
     text-align: center;
-    width: fit-content;
+    width: 300px;
     padding: 10px;
+    margin-right: 50px;
+}
+
+#title_container {
+    width: 100%;
+    display: flex;
 }
 
 #config_box {
