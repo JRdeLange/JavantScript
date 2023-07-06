@@ -7,6 +7,19 @@
     margin: 10px;
 }
 
+#info {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#info p {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 3px;
+    width: fit-content;
+}
+
 #title_container {
     width: 100%;
     display: flex;

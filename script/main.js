@@ -33,6 +33,30 @@ function loop(){
     window.requestAnimationFrame(loop);
 }
 
+// Click registration
+let isMouseDown = false;
 
-// when all sprites have been loaded
-// window.requestAnimationFrame(loop);
+function startClickRegistration(event) {
+  isMouseDown = true;
+  registerClick(event);
+}
+
+function stopClickRegistration() {
+  isMouseDown = false;
+}
+
+function registerClick(event) {
+  if (isMouseDown) {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    world.pheromone_map.place_food_at(x, y);
+  }
+}
+
+canvas.addEventListener("mousedown", startClickRegistration);
+canvas.addEventListener("mouseup", stopClickRegistration);
+canvas.addEventListener("mousemove", registerClick);
+
+// Start the animation loop
+window.requestAnimationFrame(loop);

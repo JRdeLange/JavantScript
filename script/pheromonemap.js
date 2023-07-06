@@ -22,6 +22,8 @@ export default class PheromoneMap{
         this.spread_speed = 0.35;
         this.fade_multiplier = 0.995;
         this.pheromone_threshold = 5;
+
+        this.food_brush_radius = 3;
     }
 
     initialize(){
@@ -50,11 +52,31 @@ export default class PheromoneMap{
     }
 
     drop_test_food(){
-        for (let x = 80; x < 100; x++){
-            for (let y = 60; y < 80; y++){
+        for (let x = 80; x < 90; x++){
+            for (let y = 60; y < 70; y++){
                 this.food_map[x][y] = 255;
             }
         }
+    }
+
+    place_food_at(x, y){
+        let pos = this.world_to_map_coords(x, y);
+        x = pos[0]; y = pos[1];
+        let x_range = [x];
+        let y_range = [y];
+        for (let offset = 0; offset < this.food_brush_radius; offset++){
+            x_range.push(x + offset); x_range.push(x - offset);
+            y_range.push(y + offset); y_range.push(y - offset);
+        }
+
+        for (const idx_x of x_range) {
+            for (const idx_y of y_range) {
+                if (this.is_valid_coords(idx_x, idx_y)){
+                    this.food_map[idx_x][idx_y] = 255;
+                }
+            }
+        }
+
     }
 
     spread_pheromones(){
