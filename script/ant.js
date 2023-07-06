@@ -107,7 +107,7 @@ export default class Ant{
         let drop_fraction = 0;
         if (this.food_origin_distance_to_nest > 0){
             drop_fraction = this.nest.pos.subtract(this.pos).magnitude() / this.food_origin_distance_to_nest;
-            drop_fraction = drop_fraction * 0.5 + 0.5;
+            drop_fraction = drop_fraction * 0.65 + 0.35;
         }
         this.pheromone_map.drop_pheromone_at(this.pos.x, this.pos.y, this.config.pheromone_amount * drop_fraction);
     }

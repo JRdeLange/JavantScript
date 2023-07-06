@@ -20,7 +20,7 @@ export default class PheromoneMap{
         this.initialize();
 
         this.spread_speed = 0.35;
-        this.fade_multiplier = 0.995;
+        this.fade_multiplier = 0.996;
         this.pheromone_threshold = 5;
 
         this.food_brush_radius = 3;
