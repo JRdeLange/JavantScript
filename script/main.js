@@ -7,9 +7,9 @@ let height = 600;
 const canvas = get_and_setup_canvas(width, height);
 const context = canvas.getContext("2d");
 
-const pheromone_scale = 5;
-let world = new World(width, height, pheromone_scale);
-let renderer = new Renderer(world, canvas, context, loop);
+const low_res_scale = 5;
+let world = new World(width, height, low_res_scale);
+let renderer = new Renderer(world, canvas, context, loop, low_res_scale);
 
 function get_and_setup_canvas(){
     const canvas = document.getElementById("canvas");
@@ -69,7 +69,7 @@ function registerClick(event) {
     
     
     if (isMouseDown){
-        world.pheromone_map.place_food_at(x, y);
+        world.get_food_map().place_food_at(x, y);
     }
   }
   

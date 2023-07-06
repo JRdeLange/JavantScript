@@ -3,12 +3,13 @@ import Vec2 from "./vec2.js"
 
 export default class Ant{
 
-    constructor(nest, config, pheromone_map, remove_me_function){
+    constructor(nest, config, pheromone_map, food_map, remove_me_function){
         this.nest = nest;
         this.pos = nest.pos;
         this.rot = Math.random() * 2 * Math.PI;
         this.config = config;
         this.pheromone_map = pheromone_map;
+        this.food_map = food_map;
         
         this.remove_me_function = remove_me_function;
 
@@ -20,6 +21,8 @@ export default class Ant{
 
         this.food_origin = null;
         this.food_origin_distance_to_nest = null;
+
+        this.pheromone_search_timeout = 0;
     }
 
     tick(){
@@ -53,7 +56,7 @@ export default class Ant{
     }
 
     pick_up_food(){
-        this.pheromone_map.take_food_at(this.pos.x, this.pos.y);
+        this.food_map.take_food_at(this.pos.x, this.pos.y);
         // Switch state
         this.state = "CARRY";
         this.drop_food_found_pheromones();
@@ -66,7 +69,7 @@ export default class Ant{
         let found_pheromones = this.turn_to_pheromones();
 
         // Check for food
-        if (this.pheromone_map.get_food_at(this.pos.x, this.pos.y)){
+        if (this.food_map.get_food_at(this.pos.x, this.pos.y)){
             // Pick up food
             this.pick_up_food();
         }
@@ -117,11 +120,14 @@ export default class Ant{
     }
 
     move(){
-        let have_navigation_goal = true;
         if (this.state == "SEARCH"){
             // If no pheromones were found
-            if (!this.search()){
-                have_navigation_goal = false;
+            if (this.pheromone_search_timeout > 0){
+                this.pheromone_search_timeout--;
+            } else {
+                if (!this.search()){
+                    this.pheromone_search_timeout = this.config.pheromone_lockout_window;
+                }
             }
         } else if (this.state == "CARRY"){
             this.return_to_nest();
@@ -136,14 +142,11 @@ export default class Ant{
             }
 
         }
-
-
         // Wiggle
         this.rot += (Math.random() - 0.5) * this.config.wiggle;
         
         // Move
         this.pos = this.pos.add(Vec2.from_radians(this.rot).multiply(this.config.speed));
-        
     }
 
     get_rot(){

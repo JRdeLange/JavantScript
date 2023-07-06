@@ -1,12 +1,15 @@
-
+import EnvironmentBitmap from "./environmentbitmap.js"
 
 export default class Renderer{
 
-    constructor(world, canvas, context, loop_function){
+    constructor(world, canvas, context, loop_function, low_res_scale){
         this.world = world;
         this.canvas = canvas;
         this.context = context;
         this.loop_function = loop_function;
+
+        this.environment_bitmap = new EnvironmentBitmap(world.get_pheromone_map(), 
+            world.get_food_map(), low_res_scale, canvas.width, canvas.height);
 
         // setup sprites
         this.nest_sprite = null;
@@ -14,7 +17,7 @@ export default class Renderer{
         this.ant_food_sprite = null;
         this.initialize_sprites();
 
-        this.loaded = false;
+        this.loaded = false;        
     }
 
     initialize_sprites(){
@@ -42,7 +45,7 @@ export default class Renderer{
     draw(){
         this.context.clearRect(0, 0, canvas.width, canvas.height);
 
-        this.draw_pheromone_map();
+        this.draw_environment_map();
         this.draw_nest();
         this.draw_ants();
     }
@@ -77,8 +80,9 @@ export default class Renderer{
         }
     }
 
-    draw_pheromone_map(){
-        let map_canvas = this.world.get_pheromone_map().get_scaled_canvas();
+    draw_environment_map(){
+        this.environment_bitmap.update();
+        let map_canvas = this.environment_bitmap.get_scaled_canvas();
         this.context.drawImage(map_canvas, 0, 0);
     }
 

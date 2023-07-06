@@ -10,6 +10,7 @@ export default class AntConfig{
         this.pheromone_amount = null;
         this.pheromone_detection_distance = 10;
         this.nest_interact_distance = 10;
+        this.pheromone_lockout_window = 10;
 
 
         // Parameter sliders

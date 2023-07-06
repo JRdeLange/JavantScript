@@ -3,15 +3,17 @@ import Ant from "./ant.js"
 import AntConfig from "./antconfig.js"
 import Nest from "./nest.js"
 import PheromoneMap from "./pheromonemap.js"
+import FoodMap from "./foodmap.js"
 
 
 export default class World{
 
-    constructor(width, height, pheromone_scale){
+    constructor(width, height, low_res_scale){
         // World parameters
         this.width = width;
         this.height = height;
-        this.pheromone_map = new PheromoneMap(pheromone_scale, width, height);
+        this.pheromone_map = new PheromoneMap(low_res_scale, width, height);
+        this.food_map = new FoodMap(low_res_scale, width, height);
 
         // Ant parameters
         this.ant_config = new AntConfig();
@@ -54,7 +56,7 @@ export default class World{
     }
 
     spawn_ant(){
-        let new_ant = new Ant(this.nest, this.ant_config, this.pheromone_map, this.remove_ant);
+        let new_ant = new Ant(this.nest, this.ant_config, this.pheromone_map, this.food_map, this.remove_ant);
         this.ants.push(new_ant);
     }
 
@@ -68,6 +70,10 @@ export default class World{
 
     get_pheromone_map(){
         return this.pheromone_map;
+    }
+
+    get_food_map(){
+        return this.food_map;
     }
 
     // Defined with => to make this.retiring_ants accessible
