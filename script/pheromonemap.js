@@ -18,8 +18,8 @@ export default class PheromoneMap{
 
         this.initialize();
 
-        this.spread_speed = 500;
-        this.fade_speed = 2;
+        this.spread_speed = 3;
+        this.fade_speed = 0.3;
     }
 
     initialize(){
@@ -155,6 +155,14 @@ export default class PheromoneMap{
 
     get_scaled_canvas(){
         return this.scaled_canvas;
+    }
+
+    get_value_at(x, y){
+        if (this.is_valid_coords(x, y)){
+            return this.map[x][y];
+        }
+        console.log("Invalid pheromone map coordinates");
+        return 0;
     }
 
     update_scaled_bitmap(){

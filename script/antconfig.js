@@ -5,6 +5,8 @@ export default class AntConfig{
     constructor(){
         this.speed = null;
         this.wiggle = null;
+        this.pheromone_amount = 50;
+        this.turn_speed = 0.05;
 
         // Parameter sliders
         this.ant_speed_slider = document.getElementById("ant_speed");
@@ -18,6 +20,8 @@ export default class AntConfig{
         this.ant_wiggle_slider.oninput = (event) => {
             this.wiggle = event.target.value;
         }
+
+
         
     }
 
