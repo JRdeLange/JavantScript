@@ -1,8 +1,8 @@
 import World from "./world.js"
 import Renderer from "./renderer.js"
 
-let width = 800;
-let height = 600;
+let width = 1000;
+let height = 900;
 
 const canvas = get_and_setup_canvas(width, height);
 const context = canvas.getContext("2d");
