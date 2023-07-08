@@ -8,7 +8,7 @@ export default class AntConfig{
         this.turn_speed_factor = 0.15;
         this.turn_speed = null;
         this.pheromone_amount = null;
-        this.pheromone_detection_distance = 10;
+        this.pheromone_detection_distance = 25;
         this.nest_interact_distance = 10;
         this.pheromone_lockout_window = 10;
 

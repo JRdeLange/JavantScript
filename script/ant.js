@@ -33,8 +33,8 @@ export default class Ant{
     turn_to_pheromones(){
         // At three positions
         let ahead = Vec2.from_radians(this.rot).multiply(this.config.pheromone_detection_distance);
-        let sensor_directions = [-this.config.turn_speed, 0, this.config.turn_speed * 2];
-
+        let sensor_directions = [-this.config.turn_speed, 0, this.config.turn_speed];
+        
         // Evaluate pheromones
         let highest_idx = -1;
         let highest_value = 0;
@@ -44,6 +44,11 @@ export default class Ant{
             if (value > highest_value){
                 highest_value = value;
                 highest_idx = idx;
+            } else if (value == highest_value){
+                if (Math.random() > 0.5){
+                    highest_value = value;
+                    highest_idx = idx;
+                }
             }
         }
 

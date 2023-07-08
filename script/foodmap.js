@@ -23,7 +23,7 @@ export default class FoodMap{
             }
             this.food_map.push(column);
         }
-        this.drop_test_food();
+        //this.drop_test_food();
     }
 
     drop_test_food(){
